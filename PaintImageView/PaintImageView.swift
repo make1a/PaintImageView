@@ -17,9 +17,12 @@ typealias ColorValue = (red:UInt8,green:UInt8,blue:UInt8,alpha:UInt8)
 class PaintImageView: UIImageView {
     var newColor:UIColor = .red //需要填充的新颜色
     var unchangeableColors = [UIColor]()
-    
-    var seedPointArray = [CGPoint.init(x: 860.5, y: 301.5),
-                          CGPoint.init(x: 241.0, y: 256.5)]
+//    (693.5, 217.0)  (223.0, 623.5)
+    var seedPointArray = [CGPoint.init(x: 541.5, y: 214.5),
+                          CGPoint.init(x: 449.0, y: 87.0),
+                          CGPoint.init(x: 693.0, y: 217.0),
+                          CGPoint.init(x: 223, y: 217.0),
+    ]
     
     var isFindSeedPoint = false
     var isEndCurrentFill = false
@@ -55,13 +58,14 @@ class PaintImageView: UIImageView {
     }
     
     /**
-     (860.5, 301.5)
-     (241.0, 256.5)
+     (541.5, 214.5)
+     (449.0, 87.0)
      */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touches.count == 1 , let touch = touches.first{
             let point = touch.location(in: self)
             floodFill(from: point)
+            print(point)
         }
     }
     //MARK: private method
