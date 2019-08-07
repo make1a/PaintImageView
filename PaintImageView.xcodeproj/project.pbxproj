@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		261CF87622FACC7900202F0D /* yuzhou_robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 261CF87522FACC7900202F0D /* yuzhou_robot.png */; };
 		816030F321183A630096CD43 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 816030F221183A630096CD43 /* 2.png */; };
 		816F54CC21103E8700E5EFCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816F54CB21103E8700E5EFCB /* AppDelegate.swift */; };
 		816F54CE21103E8700E5EFCB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816F54CD21103E8700E5EFCB /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		261CF87522FACC7900202F0D /* yuzhou_robot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = yuzhou_robot.png; path = ../../../PaintImageView/PaintImageView/yuzhou_robot.png; sourceTree = "<group>"; };
 		816030F221183A630096CD43 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		816F54C821103E8700E5EFCB /* PaintImageView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintImageView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		816F54CB21103E8700E5EFCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 		816F54CA21103E8700E5EFCB /* PaintImageView */ = {
 			isa = PBXGroup;
 			children = (
+				261CF87522FACC7900202F0D /* yuzhou_robot.png */,
 				816030F221183A630096CD43 /* 2.png */,
 				816F54E32110565600E5EFCB /* 1.jpg */,
 				816F54E121104B5300E5EFCB /* test.png */,
@@ -114,6 +117,7 @@
 				TargetAttributes = {
 					816F54C721103E8700E5EFCB = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 1030;
 					};
 				};
 			};
@@ -144,6 +148,7 @@
 				816F54E221104B5300E5EFCB /* test.png in Resources */,
 				816030F321183A630096CD43 /* 2.png in Resources */,
 				816F54D321103EC800E5EFCB /* Assets.xcassets in Resources */,
+				261CF87622FACC7900202F0D /* yuzhou_robot.png in Resources */,
 				816F54E42110565700E5EFCB /* 1.jpg in Resources */,
 				816F54DE2110410B00E5EFCB /* beast_2.png in Resources */,
 				816F54D121103E8700E5EFCB /* Main.storyboard in Resources */,
@@ -314,7 +319,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lkk.PaintImageView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -333,7 +338,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lkk.PaintImageView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

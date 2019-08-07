@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 class StackList<T> {
-    private var array:[T]
+    public var array:[T]
     var isEmpty:Bool {
         return array.isEmpty
     }

@@ -15,12 +15,21 @@ struct FillLineInfo : Hashable {
 }
 typealias ColorValue = (red:UInt8,green:UInt8,blue:UInt8,alpha:UInt8)
 class PaintImageView: UIImageView {
-    var newColor:UIColor = UIColor.red //需要填充的新颜色
+    var newColor:UIColor = .red //需要填充的新颜色
+    var unchangeableColors = [UIColor]()
+    
+    var seedPointArray = [CGPoint.init(x: 860.5, y: 301.5),
+                          CGPoint.init(x: 241.0, y: 256.5)]
+    
+    var isFindSeedPoint = false
+    var isEndCurrentFill = false
+    
+    
     private var pixels:Array<UInt32> //像素点的集合
     private var imageSize = CGSize.zero //图片的大小 width height都是整数
     private var seedPointList = StackList<CGPoint>() //种子点的栈列表
     private var scanedLines = [Int:FillLineInfo]() //扫描过的扫描线的信息
-    var colorTolorance = 20 //颜色差值
+    var colorTolorance = 150 //颜色差值
     
     override init(image: UIImage?) {
         self.pixels = Array<UInt32>()
@@ -37,7 +46,7 @@ class PaintImageView: UIImageView {
         super.init(coder: aDecoder)
     }
     
-    override var contentMode: UIViewContentMode {
+    override var contentMode: UIView.ContentMode {
         didSet {
             if contentMode != .scaleToFill {
                 self.contentMode = .scaleToFill
@@ -45,6 +54,10 @@ class PaintImageView: UIImageView {
         }
     }
     
+    /**
+     (860.5, 301.5)
+     (241.0, 256.5)
+     */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touches.count == 1 , let touch = touches.first{
             let point = touch.location(in: self)
@@ -78,26 +91,101 @@ class PaintImageView: UIImageView {
                 let pixelIndex = lrintf(Float(realPoint.y)) * width + lrintf(Float(realPoint.x))
                 let newColorRgbaValue = newColor.rgbaValue
                 let colorRgbaValue = pixels[pixelIndex]
-                //如果点击的黑色边框，直接退出
+                
+                let clearColor = UIColor.clear
+                if compareColor(color: colorRgbaValue, otherColor: clearColor.rgbaValue, tolorance: colorTolorance) {
+                    return
+                }
+
+                let lineColor = UIColor.init(rgb: 0x2c1010)
+                if compareColor(color: colorRgbaValue, otherColor: lineColor.rgbaValue, tolorance: colorTolorance) {
+                    return
+                }
+                // 不能改变的颜色
+                for color in unchangeableColors {
+                    let colorValue = color.rgbaValue
+                    if compareColor(color: colorRgbaValue, otherColor: colorValue, tolorance: colorTolorance) {
+                        return
+                    }
+                }
+                
+                // 如果点击的黑色边框，直接退出
                 if isBlackColor(color: colorRgbaValue) {
                     return
                 }
-                //如果点击的颜色和新颜色一样，退出
+                // 如果点击的颜色和新颜色一样，退出
                 if compareColor(color: colorRgbaValue, otherColor: newColorRgbaValue, tolorance: colorTolorance) {
                     return
                 }
+                
+                var maxX = 0
+                var minX = 0
+                var maxY = 0
+                var minY = 0
                 seedPointList.push(realPoint)
                 while !seedPointList.isEmpty {
+
                     if let point = seedPointList.pop() {
                         let (xLeft,xRight) = fillLine(seedPoint: point, newColorRgbaValue: newColorRgbaValue,
                                                       originalColorRgbaValue: colorRgbaValue)
                         scanLine(lineNumer: Int(point.y) + 1, xLeft: xLeft, xRight: xRight, originalColorRgbaValue: colorRgbaValue)
                         scanLine(lineNumer: Int(point.y) - 1, xLeft: xLeft, xRight: xRight, originalColorRgbaValue: colorRgbaValue)
+                        
+                        if xLeft < minX || minX == 0 { //最小X
+                            minX = xLeft
+                        }
+                        if xRight > maxX || maxX == 0 { //最大X
+                            maxX = xRight
+                        }
+                        if maxY == 0 && minY == 0 {
+                            maxY = Int(point.y)
+                            minY = Int(point.y)
+                        }
+                        if maxY < Int(point.y) {
+                            maxY = Int(point.y)
+                        }
+                        if minY > Int(point.y) {
+                            minY = Int(point.y)
+                        }
                     }
                 }
-                if let cgImage = context.makeImage() {
-                    image = UIImage(cgImage: cgImage, scale: image?.scale ?? 2, orientation: .up)
+                
+                print(maxX,minX,maxY,minY)
+                if isFindSeedPoint == false {
+                    for  p in seedPointArray {
+                        let x = p.x * widthScale
+                        let y = p.y * heightScale
+                        if (Int(x) < maxX && Int(x) > minX) && (Int(y) < maxY && Int(y) > minY) {
+                            isFindSeedPoint = true
+                            guard let index = seedPointArray.firstIndex(of: p) else { return  }
+                            seedPointArray.remove(at: index)
+                            break
+                        }
+                    }
                 }
+
+                
+                if let cgImage = context.makeImage() {
+                   let img = UIImage(cgImage: cgImage, scale: image?.scale ?? 2, orientation: .up)
+                    let transition = CATransition.init()
+                    transition.duration = 0.5
+                    transition.timingFunction = CAMediaTimingFunction.init(name: .linear)
+                    transition.type = .fade
+                    layer.add(transition, forKey: "colorAnimation")
+                    image = img
+                    
+
+                }
+                
+                if isFindSeedPoint == true && isEndCurrentFill == false {
+                    isEndCurrentFill = true
+                    for p in seedPointArray {
+                        floodFill(from: p)
+                    }
+                }
+                
+                isFindSeedPoint = false
+                isEndCurrentFill = false
             }
         }
     }
@@ -147,26 +235,26 @@ class PaintImageView: UIImageView {
         if lineNumer < 0 || CGFloat(lineNumer) > imageSize.height - 1{
             return
         }
-        var xCurrent = xLeft //当前被扫描的点的x位置
+        var xCurrent = xLeft // 当前被扫描的点的x位置
         let currentLineOriginalIndex = lineNumer * Int(imageSize.width)
-        var currentPixelIndex = currentLineOriginalIndex + xLeft //当前被扫描的点的所在像素点的位置
-        var currntLineMaxIndex = currentLineOriginalIndex + xRight //当前扫描线需要扫描的最后一个点的位置
+        var currentPixelIndex = currentLineOriginalIndex + xLeft // 当前被扫描的点的所在像素点的位置
+        var currntLineMaxIndex = currentLineOriginalIndex + xRight // 当前扫描线需要扫描的最后一个点的位置
         var leftSpiltIndex:Int?
         if var scanLine = scanedLines[lineNumer] {
-            if scanLine.xLeft >= xRight || scanLine.xRight <= xLeft {//没有相交，什么也不做
-            }else if scanLine.xLeft <= xLeft && scanLine.xRight >= xRight { //旧扫描与新扫描的范围关系是包含
+            if scanLine.xLeft >= xRight || scanLine.xRight <= xLeft {// 没有相交，什么也不做
+            }else if scanLine.xLeft <= xLeft && scanLine.xRight >= xRight { // 旧扫描与新扫描的范围关系是包含
                 return
-            }else if scanLine.xLeft <= xLeft && scanLine.xRight <= xRight {//旧扫描与新扫描的范围关系是左包含右被包含
+            }else if scanLine.xLeft <= xLeft && scanLine.xRight <= xRight { // 旧扫描与新扫描的范围关系是左包含右被包含
                 xCurrent = scanLine.xRight + 1
                 currentPixelIndex = currentLineOriginalIndex + scanLine.xRight + 1
                 scanLine.xRight = xRight
                 scanedLines[lineNumer] = scanLine
-            }else if scanLine.xLeft >= xLeft && scanLine.xRight >= xRight {//旧扫描与新扫描的范围关系是左被包含右包含
+            }else if scanLine.xLeft >= xLeft && scanLine.xRight >= xRight { // 旧扫描与新扫描的范围关系是左被包含右包含
                 currntLineMaxIndex = currentLineOriginalIndex + scanLine.xLeft - 1
                 leftSpiltIndex = currentLineOriginalIndex + scanLine.xLeft
                 scanLine.xLeft = xLeft
                 scanedLines[lineNumer] = scanLine
-            }else if scanLine.xLeft >= xLeft && scanLine.xRight <= xRight {//旧扫描与新扫描的范围关系是被包含
+            }else if scanLine.xLeft >= xLeft && scanLine.xRight <= xRight { // 旧扫描与新扫描的范围关系是被包含
                 scanLine.xLeft = xLeft
                 scanLine.xRight = xRight
                 scanedLines[lineNumer] = scanLine
@@ -261,5 +349,20 @@ extension UIColor {
         var alpha:CGFloat = 0
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         return UInt32(red * 255) << 0 | UInt32(green * 255) << 8 | UInt32(blue * 255) << 16 | UInt32(alpha * 255) << 24
+    }
+    
+    convenience init(rgb: Int) {
+        self.init(
+            red: (rgb >> 16) & 0xFF,
+            green: (rgb >> 8) & 0xFF,
+            blue: rgb & 0xFF
+        )
+    }
+    convenience init(red: Int, green: Int, blue: Int) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
     }
 }

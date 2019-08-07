@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina5_5" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="ipad10_5" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,48 +15,34 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PaintImageView" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" maximumZoomScale="3" translatesAutoresizingMaskIntoConstraints="NO" id="Cz9-XU-sU1">
-                                <rect key="frame" x="0.0" y="161" width="414" height="414"/>
-                                <subviews>
-                                    <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="beast_2.png" translatesAutoresizingMaskIntoConstraints="NO" id="xIv-I2-yiY" customClass="PaintImageView" customModule="PaintImageView" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
-                                    </imageView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="xIv-I2-yiY" secondAttribute="bottom" id="2or-5b-VQ8"/>
-                                    <constraint firstItem="xIv-I2-yiY" firstAttribute="leading" secondItem="Cz9-XU-sU1" secondAttribute="leading" id="B9c-wH-J9C"/>
-                                    <constraint firstItem="xIv-I2-yiY" firstAttribute="height" secondItem="Cz9-XU-sU1" secondAttribute="height" id="Dm1-AP-SpR"/>
-                                    <constraint firstItem="xIv-I2-yiY" firstAttribute="top" secondItem="Cz9-XU-sU1" secondAttribute="top" id="KUY-UT-kx8"/>
-                                    <constraint firstAttribute="width" secondItem="Cz9-XU-sU1" secondAttribute="height" multiplier="1:1" id="UGd-vf-yXJ"/>
-                                    <constraint firstItem="xIv-I2-yiY" firstAttribute="width" secondItem="Cz9-XU-sU1" secondAttribute="width" id="dQ4-pO-vbl"/>
-                                    <constraint firstAttribute="trailing" secondItem="xIv-I2-yiY" secondAttribute="trailing" id="m6u-DQ-h1S"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="ety-O1-h7s"/>
-                                </connections>
-                            </scrollView>
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yuzhou_robot.png" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9gd-u7-dY5" customClass="PaintImageView" customModule="PaintImageView" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="systemGreenColor" catalog="System" colorSpace="catalog"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Cz9-XU-sU1" secondAttribute="trailing" id="Cqh-Lf-yLP"/>
-                            <constraint firstItem="Cz9-XU-sU1" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="JKj-Ka-6d7"/>
-                            <constraint firstItem="Cz9-XU-sU1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="xel-4I-KvS"/>
+                            <constraint firstItem="9gd-u7-dY5" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="4lU-Ab-NRA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9gd-u7-dY5" secondAttribute="trailing" id="5EJ-sU-IZk"/>
+                            <constraint firstItem="9gd-u7-dY5" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="JbZ-s0-09s"/>
+                            <constraint firstItem="9gd-u7-dY5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZzE-tV-HNb"/>
+                            <constraint firstAttribute="bottom" secondItem="9gd-u7-dY5" secondAttribute="bottom" id="e70-vX-4d8"/>
+                            <constraint firstItem="9gd-u7-dY5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uWz-Xp-lS3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="paintImageView" destination="xIv-I2-yiY" id="cth-Do-3y5"/>
+                        <outlet property="paintImageView" destination="9gd-u7-dY5" id="aML-Fw-J4j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="36" y="32.833583208395808"/>
+            <point key="canvasLocation" x="35.611510791366911" y="32.374100719424462"/>
         </scene>
     </scenes>
     <resources>
-        <image name="beast_2.png" width="750" height="750"/>
+        <image name="yuzhou_robot.png" width="968" height="982"/>
     </resources>
 </document>
