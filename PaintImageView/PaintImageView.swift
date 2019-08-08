@@ -15,18 +15,19 @@ struct FillLineInfo : Hashable {
 }
 typealias ColorValue = (red:UInt8,green:UInt8,blue:UInt8,alpha:UInt8)
 class PaintImageView: UIImageView {
-    var newColor:UIColor = .red //需要填充的新颜色
+    
+    var newColor: UIColor = .red //需要填充的新颜色
     var unchangeableColors = [UIColor]()
-//    (693.5, 217.0)  (223.0, 623.5)
-    var seedPointArray = [CGPoint.init(x: 541.5, y: 214.5),
-                          CGPoint.init(x: 449.0, y: 87.0),
-                          CGPoint.init(x: 693.0, y: 217.0),
-                          CGPoint.init(x: 223, y: 217.0),
-    ]
+
+    var seedPointArray = [[CGPoint.init(x: 540, y: 198),
+                           CGPoint.init(x: 460, y: 63),
+                           CGPoint.init(x: 693.0, y: 217.0),
+                           CGPoint.init(x: 207, y: 614)]]
     
-    var isFindSeedPoint = false
-    var isEndCurrentFill = false
+    var currentSeedPointArray = [CGPoint]() // 当前关联填充颜色的种子
     
+    var isFindSeedPoint = false  // 找到关联填色的种子点
+    var isEndCurrentFill = false // 控制结束关联填色
     
     private var pixels:Array<UInt32> //像素点的集合
     private var imageSize = CGSize.zero //图片的大小 width height都是整数
@@ -56,11 +57,7 @@ class PaintImageView: UIImageView {
             }
         }
     }
-    
-    /**
-     (541.5, 214.5)
-     (449.0, 87.0)
-     */
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touches.count == 1 , let touch = touches.first{
             let point = touch.location(in: self)
@@ -101,10 +98,6 @@ class PaintImageView: UIImageView {
                     return
                 }
 
-                let lineColor = UIColor.init(rgb: 0x2c1010)
-                if compareColor(color: colorRgbaValue, otherColor: lineColor.rgbaValue, tolorance: colorTolorance) {
-                    return
-                }
                 // 不能改变的颜色
                 for color in unchangeableColors {
                     let colorValue = color.rgbaValue
@@ -121,11 +114,7 @@ class PaintImageView: UIImageView {
                 if compareColor(color: colorRgbaValue, otherColor: newColorRgbaValue, tolorance: colorTolorance) {
                     return
                 }
-                
-                var maxX = 0
-                var minX = 0
-                var maxY = 0
-                var minY = 0
+    
                 seedPointList.push(realPoint)
                 while !seedPointList.isEmpty {
 
@@ -135,44 +124,30 @@ class PaintImageView: UIImageView {
                         scanLine(lineNumer: Int(point.y) + 1, xLeft: xLeft, xRight: xRight, originalColorRgbaValue: colorRgbaValue)
                         scanLine(lineNumer: Int(point.y) - 1, xLeft: xLeft, xRight: xRight, originalColorRgbaValue: colorRgbaValue)
                         
-                        if xLeft < minX || minX == 0 { //最小X
-                            minX = xLeft
-                        }
-                        if xRight > maxX || maxX == 0 { //最大X
-                            maxX = xRight
-                        }
-                        if maxY == 0 && minY == 0 {
-                            maxY = Int(point.y)
-                            minY = Int(point.y)
-                        }
-                        if maxY < Int(point.y) {
-                            maxY = Int(point.y)
-                        }
-                        if minY > Int(point.y) {
-                            minY = Int(point.y)
-                        }
-                    }
-                }
-                
-                print(maxX,minX,maxY,minY)
-                if isFindSeedPoint == false {
-                    for  p in seedPointArray {
-                        let x = p.x * widthScale
-                        let y = p.y * heightScale
-                        if (Int(x) < maxX && Int(x) > minX) && (Int(y) < maxY && Int(y) > minY) {
-                            isFindSeedPoint = true
-                            guard let index = seedPointArray.firstIndex(of: p) else { return  }
-                            seedPointArray.remove(at: index)
-                            break
+                        if let scanlie = scanedLines[Int(point.y)] {
+                            if isFindSeedPoint == false {
+                                for  array in seedPointArray {
+                                    for p in array {
+                                        let x = Int(p.x * widthScale)
+                                        let y = Int(p.y * heightScale)
+                                        if (scanlie.lineNumber == y) && (scanlie.xLeft < x && scanlie.xRight > x) {
+                                            isFindSeedPoint = true
+                                            currentSeedPointArray = array
+                                            guard let index = currentSeedPointArray.firstIndex(of: p) else { return  }
+                                            currentSeedPointArray.remove(at: index)
+                                            break
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
 
-                
                 if let cgImage = context.makeImage() {
                    let img = UIImage(cgImage: cgImage, scale: image?.scale ?? 2, orientation: .up)
                     let transition = CATransition.init()
-                    transition.duration = 0.5
+                    transition.duration = 0.3
                     transition.timingFunction = CAMediaTimingFunction.init(name: .linear)
                     transition.type = .fade
                     layer.add(transition, forKey: "colorAnimation")
@@ -183,7 +158,7 @@ class PaintImageView: UIImageView {
                 
                 if isFindSeedPoint == true && isEndCurrentFill == false {
                     isEndCurrentFill = true
-                    for p in seedPointArray {
+                    for p in currentSeedPointArray {
                         floodFill(from: p)
                     }
                 }

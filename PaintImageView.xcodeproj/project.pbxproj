@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		261CF87622FACC7900202F0D /* yuzhou_robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 261CF87522FACC7900202F0D /* yuzhou_robot.png */; };
-		261CF87822FADA5800202F0D /* shatan_tree.png in Resources */ = {isa = PBXBuildFile; fileRef = 261CF87722FADA5800202F0D /* shatan_tree.png */; };
+		265D99A122FBC711005C8E0F /* shatan_tree.png in Resources */ = {isa = PBXBuildFile; fileRef = 265D99A022FBC710005C8E0F /* shatan_tree.png */; };
 		816030F321183A630096CD43 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 816030F221183A630096CD43 /* 2.png */; };
 		816F54CC21103E8700E5EFCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816F54CB21103E8700E5EFCB /* AppDelegate.swift */; };
 		816F54CE21103E8700E5EFCB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816F54CD21103E8700E5EFCB /* ViewController.swift */; };
@@ -24,7 +24,7 @@
 
 /* Begin PBXFileReference section */
 		261CF87522FACC7900202F0D /* yuzhou_robot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = yuzhou_robot.png; path = ../../../PaintImageView/PaintImageView/yuzhou_robot.png; sourceTree = "<group>"; };
-		261CF87722FADA5800202F0D /* shatan_tree.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shatan_tree.png; sourceTree = "<group>"; };
+		265D99A022FBC710005C8E0F /* shatan_tree.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shatan_tree.png; sourceTree = "<group>"; };
 		816030F221183A630096CD43 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		816F54C821103E8700E5EFCB /* PaintImageView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintImageView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		816F54CB21103E8700E5EFCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +70,7 @@
 		816F54CA21103E8700E5EFCB /* PaintImageView */ = {
 			isa = PBXGroup;
 			children = (
-				261CF87722FADA5800202F0D /* shatan_tree.png */,
+				265D99A022FBC710005C8E0F /* shatan_tree.png */,
 				261CF87522FACC7900202F0D /* yuzhou_robot.png */,
 				816030F221183A630096CD43 /* 2.png */,
 				816F54E32110565600E5EFCB /* 1.jpg */,
@@ -149,7 +149,7 @@
 			files = (
 				816F54D621103EC800E5EFCB /* LaunchScreen.storyboard in Resources */,
 				816F54E221104B5300E5EFCB /* test.png in Resources */,
-				261CF87822FADA5800202F0D /* shatan_tree.png in Resources */,
+				265D99A122FBC711005C8E0F /* shatan_tree.png in Resources */,
 				816030F321183A630096CD43 /* 2.png in Resources */,
 				816F54D321103EC800E5EFCB /* Assets.xcassets in Resources */,
 				261CF87622FACC7900202F0D /* yuzhou_robot.png in Resources */,
